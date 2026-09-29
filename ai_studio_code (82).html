@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="sk" data-theme="dark" data-accent="indigo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocalForge AI & Image Studio — GAMEPLA631 Partner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #090a0f;
+            --bg-sidebar: #0e1117;
+            --bg-card: rgba(18, 22, 31, 0.75);
+            --bg-card-solid: #12161f;
+            --bg-glass: rgba(18, 22, 31, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.2);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --gold: #f59e0b;
+            --gold-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --gold-glow: rgba(245, 158, 11, 0.35);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --sidebar-width: 270px;
+            --header-height: 70px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="light"] {
+            --bg-main: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-solid: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.2);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #94a3b8;
+        }
+        [data-accent="indigo"] { --accent: #6366f1; --accent-hover: #4f46e5; --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); --accent-glow: rgba(99, 102, 241, 0.3); }
+        [data-accent="violet"] { --accent: #8b5cf6; --accent-hover: #7c3aed; --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); --accent-glow: rgba(139, 92, 246, 0.3); }
+        [data-accent="emerald"] { --accent: #10b981; --accent-hover: #059669; --accent-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%); --accent-glow: rgba(16, 185, 129, 0.3); }
+        [data-accent="amber"] { --accent: #f59e0b; --accent-hover: #d97706; --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f43f5e 100%); --accent-glow: rgba(245, 158, 11, 0.3); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; overflow-x: hidden; }
+        .app-container { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
+        aside { width: var(--sidebar-width); background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; height: 100%; z-index: 100; transition: var(--transition); }
+        .sidebar-header { padding: 24px; display: flex; align-items: center; gap: 12px; }
+        .brand-logo { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; box-shadow: 0 0 20px var(--accent-glow); }
+        .brand-title h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.5px; }
+        .brand-title p { font-size: 11px; color: var(--text-muted); }
+        .sidebar-nav { flex: 1; padding: 0 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: var(--radius-md); color: var(--text-muted); font-size: 14px; font-weight: 500; transition: var(--transition); cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
+        .nav-item.active { background: var(--accent-gradient); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+        .nav-item.special-pin { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--gold); font-weight: 600; margin: 4px 0; }
+        .nav-item.special-pin.active { background: var(--gold-gradient); color: white; box-shadow: 0 4px 15px var(--gold-glow); border-color: transparent; }
+        .nav-item i { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-footer { padding: 18px; border-top: 1px solid var(--border-color); background: rgba(0, 0, 0, 0.1); }
+        .diamonds-widget { background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; }
+        .diamonds-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+        .diamonds-progress-bar { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 8px; }
+        .diamonds-progress-fill { height: 100%; background: var(--accent-gradient); width: 100%; transition: width 0.3s ease; }
+        .diamonds-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+        .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        header { height: var(--header-height); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; background: var(--bg-glass); backdrop-filter: blur(12px); z-index: 90; }
+        .header-title h2 { font-size: 18px; font-weight: 700; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .api-status-badge { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: var(--radius-full); font-size: 12px; font-weight: 500; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); }
+        .status-dot.active { background: var(--success); box-shadow: 0 0 10px var(--success); }
+        .icon-btn { width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-hover); }
+        .workspace { flex: 1; overflow-y: auto; padding: 32px; display: none; }
+        .workspace.active { display: flex; flex-direction: column; gap: 24px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; backdrop-filter: blur(10px); }
+        .tts-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; flex: 1; min-height: 0; }
+        @media(max-width: 1200px) { .tts-grid { grid-template-columns: 1fr; } }
+        .editor-container { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+        .editor-toolbar { display: flex; justify-content: space-between; align-items: center; }
+        .editor-stats { display: flex; gap: 24px; font-size: 13px; color: var(--text-muted); }
+        .editor-stats strong { color: var(--text-main); }
+        textarea.tts-textarea { flex: 1; width: 100%; background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; transition: var(--transition); min-height: 250px; }
+        textarea.tts-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .editor-actions-bar { display: flex; justify-content: space-between; align-items: center; }
+        .btn-group { display: flex; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; }
+        .btn-primary { background: var(--accent-gradient); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-gold { background: var(--gold-gradient); color: #fff; box-shadow: 0 4px 15px var(--gold-glow); }
+        .btn-gold:hover { opacity: 0.95; transform: translateY(-1px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-hover); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .settings-panel { display: flex; flex-direction: column; gap: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; overflow-y: auto; }
+        .setting-group { display: flex; flex-direction: column; gap: 8px; }
+        .setting-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        select, input[type="text"], input[type="password"], input[type="email"], input[type="number"] { width: 100%; background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; color: var(--text-main); font-size: 14px; outline: none; transition: var(--transition); }
+        select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .range-slider { display: flex; align-items: center; gap: 12px; }
+        input[type="range"] { flex: 1; accent-color: var(--accent); }
+        .audio-player-card { background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; display: flex; align-items: center; gap: 20px; margin-top: 16px; }
+        .player-main-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--accent-gradient); border: none; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px var(--accent-glow); flex-shrink: 0; }
+        .player-track-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .player-progress-bar { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-full); overflow: hidden; cursor: pointer; position: relative; }
+        .player-progress-fill { height: 100%; background: var(--accent); width: 0%; }
+        .voices-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .voice-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; flex-direction: column; gap: 16px; transition: var(--transition); }
+        .voice-avatar { width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent); }
+        .badge { padding: 4px 8px; border-radius: var(--radius-full); font-size: 10px; font-weight: 600; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-muted); }
+        .badge.accent { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2); color: var(--accent); }
+        .badge.gold { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); color: var(--gold); }
+        .badge.success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: var(--success); }
+        .badge.danger { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
+        .data-table-container { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+        th { font-weight: 600; color: var(--text-muted); background: rgba(0, 0, 0, 0.2); }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .metric-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .metric-icon { width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(99, 102, 241, 0.1); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .metric-value { font-size: 28px; font-weight: 700; }
+        .gamepla-banner { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-lg); padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .gamepla-logo-icon { width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--gold-gradient); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 0 20px var(--gold-glow); }
+        .conditions-folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; margin-top: 16px; max-height: 420px; overflow-y: auto; padding-right: 8px; }
+        .condition-item { background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .condition-item.checked { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); }
+        .pin-code-box { font-family: monospace; font-size: 20px; font-weight: 700; letter-spacing: 2px; padding: 12px 20px; background: rgba(0, 0, 0, 0.4); border: 1px dashed var(--gold); border-radius: var(--radius-md); color: var(--gold); text-align: center; }
+        /* IMAGE CONVERTER STYLES */
+        .dropzone-box { border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center; cursor: pointer; transition: var(--transition); background: rgba(255, 255, 255, 0.02); }
+        .dropzone-box:hover, .dropzone-box.dragover { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); }
+        .img-preview-canvas { max-width: 100%; max-height: 320px; border-radius: var(--radius-md); border: 1px solid var(--border-color); object-fit: contain; background: repeating-conic-gradient(#1f2430 0% 25%, #141822 0% 50%) 50% / 20px 20px; }
+        #toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 9999; }
+        .toast { background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 14px; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card { background: var(--bg-card-solid); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 100%; max-width: 520px; padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+        @media(max-width: 768px) { aside { position: fixed; left: calc(-1 * var(--sidebar-width)); height: 100%; } aside.mobile-open { left: 0; } .workspace { padding: 16px; } header { padding: 0 16px; } }
+        kbd { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo"><i class="fa-solid fa-waveform-lines"></i></div>
+                <div class="brand-title">
+                    <h1 data-i18n="appName">VocalForge AI</h1>
+                    <p data-i18n="appSubtitle">AI Voice & Image Studio</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i> <span data-i18n="navDashboard">Dashboard</span>
+                </button>
+                <button class="nav-item" data-view="tts">
+                    <i class="fa-solid fa-microphone-lines"></i> <span data-i18n="navTts">Text to Speech</span>
+                </button>
+                <button class="nav-item" data-view="img-converter">
+                    <i class="fa-solid fa-image"></i> <span data-i18n="navImgConverter">Image Converter</span>
+                </button>
+                <button class="nav-item special-pin" data-view="gamepla-pin">
+                    <i class="fa-solid fa-key"></i> <span data-i18n="navGameplaPin">GAMEPLA631 PIN</span>
+                </button>
+                <button class="nav-item" data-view="voices">
+                    <i class="fa-solid fa-users-viewfinder"></i> <span data-i18n="navVoices">Voice Library</span>
+                </button>
+                <button class="nav-item" data-view="projects">
+                    <i class="fa-solid fa-folder-open"></i> <span data-i18n="navProjects">Projects</span>
+                </button>
+                <button class="nav-item" data-view="history">
+                    <i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="navHistory">History</span>
+                </button>
+                <button class="nav-item" data-view="settings">
+                    <i class="fa-solid fa-gear"></i> <span data-i18n="navSettings">Settings</span>
+                </button>
+                <button class="nav-item" data-view="help">
+                    <i class="fa-solid fa-circle-question"></i> <span data-i18n="navHelp">Help</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="diamonds-widget">
+                    <div class="diamonds-header">
+                        <span>💎 <span data-i18n="navDiamonds">Diamonds</span></span>
+                        <span id="diamonds-counter">1,000 / 1,000</span>
+                    </div>
+                    <div class="diamonds-progress-bar">
+                        <div id="diamonds-fill" class="diamonds-progress-fill"></div>
+                    </div>
+                    <div class="diamonds-meta">
+                        <span data-i18n="resetEveryDay">Reset: 00:00</span>
+                        <span id="reset-timer">00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTAINER -->
+        <main class="main-content">
+            <header>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <button class="icon-btn" id="mobile-menu-toggle" style="display: none;"><i class="fa-solid fa-bars"></i></button>
+                    <div class="header-title"><h2 id="current-view-title">Dashboard</h2></div>
+                </div>
+                <div class="header-actions">
+                    <div class="api-status-badge">
+                        <div id="api-status-dot" class="status-dot"></div>
+                        <span id="api-status-text">Demo Mode</span>
+                    </div>
+                    <button class="icon-btn" id="theme-toggle" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </header>
+
+            <!-- 1. DASHBOARD -->
+            <section id="view-dashboard" class="workspace active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fa-solid fa-gem"></i></div>
+                        <div class="metric-value" id="stat-diamonds">1,000</div>
+                        <div class="metric-label" data-i18n="statDiamonds">Remaining Diamonds</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fa-solid fa-microphone"></i></div>
+                        <div class="metric-value" id="stat-generations">0</div>
+                        <div class="metric-label" data-i18n="statGenerations">Total Generations</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fa-solid fa-images"></i></div>
+                        <div class="metric-value" id="stat-img-conversions">0</div>
+                        <div class="metric-label">Converted Images</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="metric-value" id="stat-pin-status">Neaktívny</div>
+                        <div class="metric-label">GAMEPLA631 PIN Status</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;" data-i18n="recentActivity">Recent Activity</h3>
+                    <div class="data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Project / Text</th>
+                                    <th>Voice / Detail</th>
+                                    <th>Date</th>
+                                    <th>Duration / Info</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-recent-history"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TEXT TO SPEECH -->
+            <section id="view-tts" class="workspace">
+                <div class="tts-grid">
+                    <div class="editor-container card">
+                        <div class="editor-toolbar">
+                            <div class="editor-stats">
+                                <span>Characters: <strong id="char-count">0</strong> / 5,000</span>
+                                <span>Words: <strong id="word-count">0</strong></span>
+                                <span>Duration: <strong id="est-duration">00:00</strong></span>
+                            </div>
+                        </div>
+                        <textarea id="tts-input" class="tts-textarea" placeholder="Type or paste your text here to convert into professional speech..." maxlength="5000"></textarea>
+                        
+                        <div class="editor-actions-bar">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" id="btn-clear"><i class="fa-solid fa-trash-can"></i> Clear</button>
+                                <button class="btn btn-secondary" id="btn-save-project"><i class="fa-solid fa-floppy-disk"></i> Save Project</button>
+                            </div>
+                            <button class="btn btn-primary" id="btn-generate">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Speech
+                            </button>
+                        </div>
+
+                        <div id="audio-player-wrapper" style="display: none;">
+                            <div class="audio-player-card">
+                                <button class="player-main-btn" id="player-play-btn"><i class="fa-solid fa-play" id="player-play-icon"></i></button>
+                                <div class="player-track-info">
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                        <span id="player-title">Generated Audio</span>
+                                        <span class="player-time" id="player-time-display">00:00 / 00:00</span>
+                                    </div>
+                                    <div class="player-progress-bar">
+                                        <div class="player-progress-fill" id="player-progress-fill"></div>
+                                    </div>
+                                </div>
+                                <button class="icon-btn" id="player-download-btn"><i class="fa-solid fa-download"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-panel">
+                        <h3 style="font-size: 16px;">Voice & Model Settings</h3>
+                        <div class="setting-group">
+                            <label>Voice</label>
+                            <select id="select-voice">
+                                <option value="en-US-Neural2-F">Emma (English, US)</option>
+                                <option value="en-US-Neural2-J">Liam (English, US)</option>
+                                <option value="sk-SK-Standard-A">Zuzana (Slovenčina)</option>
+                                <option value="cs-CZ-Standard-A">Eliška (Čeština)</option>
+                                <option value="de-DE-Neural2-F">Gisela (Deutsch)</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Language</label>
+                            <select id="select-language">
+                                <option value="en">English</option>
+                                <option value="sk">Slovenčina</option>
+                                <option value="cs">Čeština</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Model</label>
+                            <select id="select-model">
+                                <option value="tts-1">Google Cloud TTS (Standard)</option>
+                                <option value="gemini-2.5-flash-audio">Gemini 2.5 Flash Audio</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Speed (<span id="speed-val">1.0</span>x)</label>
+                            <input type="range" id="range-speed" min="0.5" max="2.0" step="0.25" value="1.0">
+                        </div>
+                        <div class="setting-group">
+                            <label>Pitch (<span id="pitch-val">0</span>)</label>
+                            <input type="range" id="range-pitch" min="-5" max="5" step="1" value="0">
+                        </div>
+                        <div class="setting-group">
+                            <label>Volume (<span id="volume-val">100</span>%)</label>
+                            <input type="range" id="range-volume" min="0" max="100" step="1" value="100">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. IMAGE CONVERTER VIEW -->
+            <section id="view-img-converter" class="workspace">
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+                    <div class="card" style="display: flex; flex-direction: column; gap: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 700;"><i class="fa-solid fa-photo-film" style="color: var(--accent); margin-right: 8px;"></i> Prevodník & Konvertor formátov obrázkov</h3>
+                        
+                        <!-- Upload Dropzone -->
+                        <div class="dropzone-box" id="img-dropzone">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 40px; color: var(--accent); margin-bottom: 12px;"></i>
+                            <h4 style="font-size: 15px; margin-bottom: 6px;">Potiahnite obrázok sem alebo kliknite pre výber</h4>
+                            <p style="font-size: 12px; color: var(--text-muted);">Podporuje: PNG, JPG, JPEG, WEBP, GIF, BMP, SVG, ICO</p>
+                            <input type="file" id="img-file-input" accept="image/*" style="display: none;">
+                        </div>
+
+                        <!-- Image Display / Preview -->
+                        <div id="img-preview-container" style="display: none; flex-direction: column; gap: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 13px; font-weight: 600;" id="img-name-info">obrazok.png</span>
+                                <span class="badge accent" id="img-size-info">1920x1080 • 1.2 MB</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <img id="img-preview-element" class="img-preview-canvas" alt="Náhľad obrázka">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversion Options -->
+                    <div class="settings-panel">
+                        <h3 style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-sliders"></i> Nastavenie konverzie</h3>
+                        
+                        <div class="setting-group">
+                            <label>Cieľový formát obrázka</label>
+                            <select id="select-target-format">
+                                <option value="image/png">PNG (.png) — Bezstratový s priehľadnosťou</option>
+                                <option value="image/jpeg">JPG / JPEG (.jpg) — Web & Fotografie</option>
+                                <option value="image/webp">WEBP (.webp) — Moderný komprimovaný formát</option>
+                                <option value="image/bmp">BMP (.bmp) — Bitmapový obrázok</option>
+                                <option value="image/x-icon">ICO (.ico) — Ikona webstránky</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group" id="group-img-quality">
+                            <label>Kvalita výstupu (<span id="img-quality-val">92</span>%)</label>
+                            <input type="range" id="range-img-quality" min="10" max="100" step="1" value="92">
+                        </div>
+
+                        <div class="setting-group">
+                            <label>Zmena mierky rozmerov</label>
+                            <select id="select-img-scale">
+                                <option value="1">100% (Pôvodná veľkosť)</option>
+                                <option value="0.75">75% veľkosti</option>
+                                <option value="0.5">50% veľkosti</option>
+                                <option value="0.25">25% (Náhľad / Thumbnail)</option>
+                                <option value="2">200% (Zväčšenie)</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" id="btn-convert-image" style="margin-top: 10px;" disabled>
+                            <i class="fa-solid fa-rotate"></i> Konvertovať obrázok
+                        </button>
+
+                        <div id="img-download-box" style="display: none; flex-direction: column; gap: 10px; margin-top: 12px; padding: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md);">
+                            <span style="font-size: 13px; color: var(--success); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Konverzia úspešne dokončená!</span>
+                            <button class="btn btn-gold" id="btn-download-converted"><i class="fa-solid fa-download"></i> Stiahnuť konvertovaný súbor</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. GAMEPLA631 PIN -->
+            <section id="view-gamepla-pin" class="workspace">
+                <div class="gamepla-banner">
+                    <div class="gamepla-logo-icon"><i class="fa-solid fa-crown"></i></div>
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800;">GAMEPLA631 — Oficiálny PIN Licenčný Systém</h2>
+                        <p style="font-size: 13px; color: var(--text-muted);">Získajte prémiový PIN kľúč od spoločnosti GAMEPLA631. Žiadosť podlieha 3-dňovej kontrole a 20 podmienkam.</p>
+                    </div>
+                    <span class="badge gold" style="font-size: 12px; padding: 8px 14px;"><i class="fa-solid fa-shield-check"></i> GAMEPLA631 Verified</span>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 700;"><i class="fa-solid fa-folder-tree" style="color: var(--gold); margin-right: 8px;"></i> Zložka: 20 povinných podmienok žiadateľa</h3>
+                            <p style="font-size: 12px; color: var(--text-muted);">Pre schválenie žiadosti po 3 pracovných dňoch musíte splniť všetkých 20 podmienok, inak bude zamietnutá.</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 14px; font-weight: 700;">Splnené: <strong id="conditions-counter" style="color: var(--gold);">0</strong> / 20</span>
+                            <button class="btn btn-secondary" id="btn-select-all-conditions" style="padding: 6px 12px; font-size: 12px;">Označiť všetky</button>
+                        </div>
+                    </div>
+                    <div class="conditions-folder-grid" id="conditions-container"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+                        <h3 style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-file-signature"></i> Formulár žiadosti o GAMEPLA631 PIN</h3>
+                        <div class="setting-group"><label>Meno žiadateľa / Štúdio</label><input type="text" id="gp-form-name" placeholder="napr. Alex Voice Studio"></div>
+                        <div class="setting-group"><label>GAMEPLA631 ID kód</label><input type="text" id="gp-form-id" placeholder="napr. GP-USER-9842"></div>
+                        <div class="setting-group"><label>Kontaktný E-mail</label><input type="email" id="gp-form-email" placeholder="vas-email@domena.com"></div>
+                        <div class="setting-group">
+                            <label>Typ balíka</label>
+                            <select id="gp-form-tier">
+                                <option value="standard">Standard Partner PIN (+5,000 Diamantov)</option>
+                                <option value="pro">Pro Developer PIN (+10,000 Diamantov + VIP Hlasy)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-gold" id="btn-submit-gamepla-form"><i class="fa-solid fa-paper-plane"></i> Odoslať žiadosť (3 prac. dni)</button>
+                    </div>
+
+                    <div class="card" style="display: flex; flex-direction: column; gap: 18px;">
+                        <h3 style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-hourglass-half"></i> Stav žiadosti & Aktivátor</h3>
+                        <div id="gamepla-status-box" style="padding: 16px; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md);"></div>
+                        <hr style="border: none; border-top: 1px solid var(--border-color);">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <h4 style="font-size: 14px; font-weight: 700;"><i class="fa-solid fa-key" style="color: var(--gold);"></i> Aktivovať GAMEPLA631 PIN</h4>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="gp-pin-redeem-input" placeholder="GP631-XXXX-XXXX" style="font-family: monospace; text-transform: uppercase;">
+                                <button class="btn btn-primary" id="btn-redeem-gp-pin"><i class="fa-solid fa-check"></i> Aktivovať</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. VOICES -->
+            <section id="view-voices" class="workspace">
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between;">
+                    <div style="display: flex; gap: 8px;" id="voice-filter-chips">
+                        <button class="btn btn-primary" data-filter="all" style="padding: 6px 14px; font-size: 13px;">All</button>
+                        <button class="btn btn-secondary" data-filter="en" style="padding: 6px 14px; font-size: 13px;">English</button>
+                        <button class="btn btn-secondary" data-filter="sk" style="padding: 6px 14px; font-size: 13px;">Slovenčina</button>
+                    </div>
+                    <input type="text" id="voice-search" placeholder="Search voices..." style="max-width: 280px;">
+                </div>
+                <div class="voices-grid" id="voices-container"></div>
+            </section>
+
+            <!-- 6. PROJECTS -->
+            <section id="view-projects" class="workspace">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Projects</h3>
+                    <button class="btn btn-primary" id="btn-new-project"><i class="fa-solid fa-plus"></i> New Project</button>
+                </div>
+                <div class="card data-table-container">
+                    <table>
+                        <thead><tr><th>Project Name</th><th>Voice</th><th>Updated</th><th>Actions</th></tr></thead>
+                        <tbody id="projects-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 7. HISTORY -->
+            <section id="view-history" class="workspace">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Generation History</h3>
+                    <button class="btn btn-danger" id="btn-clear-history"><i class="fa-solid fa-trash"></i> Clear History</button>
+                </div>
+                <div class="card data-table-container">
+                    <table>
+                        <thead><tr><th>Preview</th><th>Voice / Type</th><th>Date</th><th>Diamonds</th><th>Actions</th></tr></thead>
+                        <tbody id="history-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 8. SETTINGS -->
+            <section id="view-settings" class="workspace">
+                <div class="card" style="max-width: 700px; display: flex; flex-direction: column; gap: 24px;">
+                    <h3>Google Gemini API Configuration</h3>
+                    <div class="setting-group">
+                        <label>Google API Key</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="password" id="input-api-key" placeholder="AIzaSy...">
+                            <button class="btn btn-secondary" id="btn-toggle-key"><i class="fa-solid fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-primary" id="btn-save-key">Save API Key</button>
+                        <button class="btn btn-danger" id="btn-clear-key">Clear Key</button>
+                        <button class="btn btn-secondary" id="btn-test-key">Test Connection</button>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid var(--border-color);">
+                    <div class="setting-group">
+                        <label>Interface Language</label>
+                        <select id="select-ui-lang">
+                            <option value="sk">🇸🇰 Slovenčina</option>
+                            <option value="cs">🇨🇿 Čeština</option>
+                            <option value="en">🇬🇧 English</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label>Accent Color</label>
+                        <select id="select-accent">
+                            <option value="indigo">Indigo Glow</option>
+                            <option value="violet">Deep Violet</option>
+                            <option value="emerald">Emerald Cyan</option>
+                            <option value="amber">Amber Rose</option>
+                        </select>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid var(--border-color);">
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="btn-export-data"><i class="fa-solid fa-file-export"></i> Export Data</button>
+                        <button class="btn btn-secondary" id="btn-import-trigger"><i class="fa-solid fa-file-import"></i> Import Data</button>
+                        <input type="file" id="import-file-input" style="display: none;" accept=".json">
+                        <button class="btn btn-danger" id="btn-clear-all-data"><i class="fa-solid fa-trash"></i> Reset All Data</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. HELP -->
+            <section id="view-help" class="workspace">
+                <div class="card" style="max-width: 700px; display: flex; flex-direction: column; gap: 16px;">
+                    <h3>Keyboard Shortcuts</h3>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span>Generate Speech</span><kbd>Ctrl + Enter</kbd></div>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span>Save Project</span><kbd>Ctrl + S</kbd></div>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0;"><span>Image Drag & Drop</span><kbd>Drop any image</kbd></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Save Project</h3>
+                <button class="icon-btn close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="setting-group"><label>Project Name</label><input type="text" id="modal-project-name"></div>
+            <button class="btn btn-primary" id="modal-save-btn">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = { dailyDiamonds: 1000, charsPerDiamond: 10 };
+
+        const GAMEPLA_CONDITIONS = [
+            { id: 1, title: "1. Overené používateľské konto", desc: "Platný profil žiadateľa v sieti GAMEPLA." },
+            { id: 2, title: "2. Dvojfaktorová autentifikácia (2FA)", desc: "Aktivované lokálne zabezpečenie." },
+            { id: 3, title: "3. Minimálne 5 úspešných syntéz", desc: "História generovania hlasu v štúdiu." },
+            { id: 4, title: "4. Zásady AI Fair-Use", desc: "Súhlas s etickým používaním syntézy." },
+            { id: 5, title: "5. Žiadne sankcie za 90 dní", desc: "Čistý register voči pravidlám štúdia." },
+            { id: 6, title: "6. Partnerská referencia", desc: "Priradenie overeného identifikátora GAMEPLA631." },
+            { id: 7, title: "7. Platný overený e-mail", desc: "Funkčný kontakt pre doručenie PIN." },
+            { id: 8, title: "8. Licenčná zmluva", desc: "Podpísaný súhlas s distribúciou." },
+            { id: 9, title: "9. Spotreba diamantov", desc: "Preukázaná aktivita v štúdiu." },
+            { id: 10, title: "10. Registrácia prehliadača", desc: "Jedinečný odtlačok pre aktiváciu PIN." },
+            { id: 11, title: "11. Bezpečnostný test", desc: "Kompatibilita s cloudovými modelmi." },
+            { id: 12, title: "12. Zákaz re-streamu", desc: "Záväzok nezneužívať syntetizér na spam." },
+            { id: 13, title: "13. Integrita úložiska", desc: "Dáta projektu bez neoprávnenej manipulácie." },
+            { id: 14, title: "14. Kompletnosť formulára", desc: "Všetky polia obsahujú pravdivé údaje." },
+            { id: 15, title: "15. Lehota 3 pracovných dní", desc: "Súhlas s trojdňovou bezpečnostnou lehotou." },
+            { id: 16, title: "16. Autorské práva", desc: "Texty neporušujú duševné vlastníctvo." },
+            { id: 17, title: "17. Hardvérová akcelerácia", desc: "Podpora zvukových a grafických kodekov." },
+            { id: 18, title: "18. Šifrované ukladanie", desc: "Ochrana Google API a PIN pred exportom." },
+            { id: 19, title: "19. Zhoda regiónu požiadavky", desc: "Konzistentný región pre hlasový model." },
+            { id: 20, title: "20. Finálne schválenie GAMEPLA631", desc: "Záverečná verifikácia splnenia 20 kritérií." }
+        ];
+
+        const VOICES = [
+            { id: 'en-US-Neural2-F', name: 'Emma', lang: 'en', gender: 'Female', style: 'Conversational', avatar: '👩' },
+            { id: 'en-US-Neural2-J', name: 'Liam', lang: 'en', gender: 'Male', style: 'Professional', avatar: '👨' },
+            { id: 'sk-SK-Standard-A', name: 'Zuzana', lang: 'sk', gender: 'Female', style: 'Natural', avatar: '👩‍🰂' },
+            { id: 'cs-CZ-Standard-A', name: 'Eliška', lang: 'cs', gender: 'Female', style: 'Warm', avatar: '👩‍🦰' },
+            { id: 'de-DE-Neural2-F', name: 'Gisela', lang: 'de', gender: 'Female', style: 'Formal', avatar: '👱‍♀️' }
+        ];
+
+        const state = {
+            currentView: 'dashboard',
+            uiLang: localStorage.getItem('vocalforge_lang') || 'sk',
+            theme: localStorage.getItem('vocalforge_theme') || 'dark',
+            accent: localStorage.getItem('vocalforge_accent') || 'indigo',
+            apiKey: localStorage.getItem('vocalforge_apikey') || '',
+            diamonds: parseInt(localStorage.getItem('vocalforge_diamonds')) || 1000,
+            lastResetDate: localStorage.getItem('vocalforge_reset_date') || new Date().toDateString(),
+            history: JSON.parse(localStorage.getItem('vocalforge_history')) || [],
+            projects: JSON.parse(localStorage.getItem('vocalforge_projects')) || [],
+            imgConversionsCount: parseInt(localStorage.getItem('vocalforge_img_count')) || 0,
+            gameplaConditions: JSON.parse(localStorage.getItem('vocalforge_gp_conditions')) || [],
+            gameplaApp: JSON.parse(localStorage.getItem('vocalforge_gp_app')) || null,
+            gameplaPinActive: localStorage.getItem('vocalforge_gp_pin_active') === 'true',
+            // Current Loaded Image State
+            currentImageObject: null,
+            currentImageName: '',
+            convertedDownloadUrl: null,
+            convertedExtension: 'png'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkDailyDiamondsReset();
+            applyThemeAndAccent();
+            updateUIStats();
+            renderDashboardHistory();
+            renderVoices();
+            renderProjects();
+            renderHistoryTable();
+            renderGameplaConditions();
+            updateGameplaStatusUI();
+            setupEventListeners();
+            setupImageConverterEvents();
+            startResetTimer();
+        });
+
+        function addBusinessDays(startDate, daysToAdd) {
+            let cur = new Date(startDate);
+            let added = 0;
+            while(added < daysToAdd) {
+                cur.setDate(cur.getDate() + 1);
+                if(cur.getDay() !== 0 && cur.getDay() !== 6) added++;
+            }
+            return cur;
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+            });
+
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            if(window.innerWidth <= 768) mobileToggle.style.display = 'flex';
+            mobileToggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('mobile-open'));
+
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            document.getElementById('select-ui-lang').addEventListener('change', (e) => {
+                state.uiLang = e.target.value;
+                localStorage.setItem('vocalforge_lang', state.uiLang);
+            });
+            document.getElementById('select-accent').addEventListener('change', (e) => {
+                state.accent = e.target.value;
+                localStorage.setItem('vocalforge_accent', state.accent);
+                applyThemeAndAccent();
+            });
+
+            const ttsInput = document.getElementById('tts-input');
+            ttsInput.addEventListener('input', () => {
+                const text = ttsInput.value;
+                document.getElementById('char-count').innerText = text.length;
+                document.getElementById('word-count').innerText = text.trim() ? text.trim().split(/\s+/).length : 0;
+            });
+
+            ['speed', 'pitch', 'volume'].forEach(t => {
+                const slider = document.getElementById(`range-${t}`);
+                if(slider) slider.addEventListener('input', () => document.getElementById(`${t}-val`).innerText = slider.value);
+            });
+
+            document.getElementById('btn-clear').addEventListener('click', () => { ttsInput.value = ''; ttsInput.dispatchEvent(new Event('input')); });
+            document.getElementById('btn-generate').addEventListener('click', generateSpeech);
+
+            const apiKeyInput = document.getElementById('input-api-key');
+            if(state.apiKey) apiKeyInput.value = state.apiKey;
+            document.getElementById('btn-save-key').addEventListener('click', () => {
+                state.apiKey = apiKeyInput.value.trim();
+                localStorage.setItem('vocalforge_apikey', state.apiKey);
+                showToast('API Kľúč uložený', 'success');
+                updateApiStatusBadge();
+            });
+            document.getElementById('btn-clear-key').addEventListener('click', () => {
+                state.apiKey = '';
+                localStorage.removeItem('vocalforge_apikey');
+                apiKeyInput.value = '';
+                showToast('API Kľúč zmazaný', 'warning');
+                updateApiStatusBadge();
+            });
+            document.getElementById('btn-toggle-key').addEventListener('click', () => {
+                apiKeyInput.type = apiKeyInput.type === 'password' ? 'text' : 'password';
+            });
+            document.getElementById('btn-test-key').addEventListener('click', () => showToast('Google API pripojenie overené!', 'success'));
+
+            document.getElementById('btn-select-all-conditions').addEventListener('click', () => {
+                state.gameplaConditions = GAMEPLA_CONDITIONS.map(c => c.id);
+                localStorage.setItem('vocalforge_gp_conditions', JSON.stringify(state.gameplaConditions));
+                renderGameplaConditions();
+                showToast('Všetkých 20 podmienok označených', 'success');
+            });
+
+            document.getElementById('btn-submit-gamepla-form').addEventListener('click', submitGameplaForm);
+            document.getElementById('btn-redeem-gp-pin').addEventListener('click', redeemGameplaPin);
+
+            document.getElementById('btn-save-project').addEventListener('click', openSaveProjectModal);
+            document.getElementById('modal-save-btn').addEventListener('click', saveCurrentProject);
+            document.getElementById('btn-new-project').addEventListener('click', () => { switchView('tts'); document.getElementById('tts-input').value = ''; });
+            document.getElementById('btn-clear-history').addEventListener('click', () => {
+                state.history = [];
+                localStorage.removeItem('vocalforge_history');
+                renderHistoryTable();
+                renderDashboardHistory();
+                showToast('História vymazaná', 'success');
+            });
+            document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', () => document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'))));
+
+            document.getElementById('btn-export-data').addEventListener('click', () => {
+                const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `vocalforge_backup_${Date.now()}.json`; a.click();
+            });
+            document.getElementById('btn-import-trigger').addEventListener('click', () => document.getElementById('import-file-input').click());
+            document.getElementById('import-file-input').addEventListener('change', (e) => {
+                const f = e.target.files[0];
+                if(!f) return;
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    try { Object.assign(state, JSON.parse(ev.target.result)); localStorage.clear(); location.reload(); } catch(err) { showToast('Neplatný JSON', 'error'); }
+                };
+                r.readAsText(f);
+            });
+            document.getElementById('btn-clear-all-data').addEventListener('click', () => { if(confirm('Vymazať všetky dáta?')) { localStorage.clear(); location.reload(); } });
+
+            updateApiStatusBadge();
+        }
+
+        // IMAGE CONVERTER ENGINE
+        function setupImageConverterEvents() {
+            const dropzone = document.getElementById('img-dropzone');
+            const fileInput = document.getElementById('img-file-input');
+            const qualitySlider = document.getElementById('range-img-quality');
+            const qualityVal = document.getElementById('img-quality-val');
+            const formatSelect = document.getElementById('select-target-format');
+            const btnConvert = document.getElementById('btn-convert-image');
+            const btnDownload = document.getElementById('btn-download-converted');
+
+            dropzone.addEventListener('click', () => fileInput.click());
+            dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+            dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                if(e.dataTransfer.files.length) handleImageFile(e.dataTransfer.files[0]);
+            });
+            fileInput.addEventListener('change', (e) => {
+                if(e.target.files.length) handleImageFile(e.target.files[0]);
+            });
+
+            qualitySlider.addEventListener('input', () => qualityVal.innerText = qualitySlider.value);
+            formatSelect.addEventListener('change', () => {
+                document.getElementById('group-img-quality').style.display = (formatSelect.value === 'image/jpeg' || formatSelect.value === 'image/webp') ? 'flex' : 'none';
+            });
+
+            btnConvert.addEventListener('click', convertImageProcess);
+            btnDownload.addEventListener('click', () => {
+                if(!state.convertedDownloadUrl) return;
+                const a = document.createElement('a');
+                a.href = state.convertedDownloadUrl;
+                const baseName = state.currentImageName.substring(0, state.currentImageName.lastIndexOf('.')) || 'image';
+                a.download = `${baseName}_converted.${state.convertedExtension}`;
+                a.click();
+                showToast(`Súbor ${a.download} bol úspešne stiahnutý!`, 'success');
+            });
+        }
+
+        function handleImageFile(file) {
+            if(!file.type.startsWith('image/')) {
+                showToast('Prosím nahrajte platný obrázok (PNG, JPG, WEBP, BMP...)', 'error');
+                return;
+            }
+            state.currentImageName = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    state.currentImageObject = img;
+                    document.getElementById('img-preview-element').src = img.src;
+                    document.getElementById('img-preview-container').style.display = 'flex';
+                    document.getElementById('img-name-info').innerText = file.name;
+                    document.getElementById('img-size-info').innerText = `${img.naturalWidth} x ${img.naturalHeight} px • ${(file.size / 1024).toFixed(1)} KB`;
+                    document.getElementById('btn-convert-image').disabled = false;
+                    document.getElementById('img-download-box').style.display = 'none';
+                    showToast('Obrázok úspešne načítaný', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function convertImageProcess() {
+            if(!state.currentImageObject) return;
+            const img = state.currentImageObject;
+            const formatMime = document.getElementById('select-target-format').value;
+            const quality = parseFloat(document.getElementById('range-img-quality').value) / 100;
+            const scale = parseFloat(document.getElementById('select-img-scale').value);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.naturalWidth * scale);
+            canvas.height = Math.round(img.naturalHeight * scale);
+
+            const ctx = canvas.getContext('2d');
+            if(formatMime === 'image/jpeg') {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            const extMap = {
+                'image/png': 'png',
+                'image/jpeg': 'jpg',
+                'image/webp': 'webp',
+                'image/bmp': 'bmp',
+                'image/x-icon': 'ico'
+            };
+            state.convertedExtension = extMap[formatMime] || 'png';
+            state.convertedDownloadUrl = canvas.toDataURL(formatMime, quality);
+
+            state.imgConversionsCount++;
+            localStorage.setItem('vocalforge_img_count', state.imgConversionsCount);
+            document.getElementById('stat-img-conversions').innerText = state.imgConversionsCount;
+
+            document.getElementById('img-download-box').style.display = 'flex';
+            showToast(`Obrázok bol úspešne prekonvertovaný do ${state.convertedExtension.toUpperCase()}!`, 'success');
+        }
+
+        function switchView(viewName) {
+            state.currentView = viewName;
+            document.querySelectorAll('.workspace').forEach(w => w.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const targetView = document.getElementById(`view-${viewName}`);
+            if(targetView) targetView.classList.add('active');
+            const targetNav = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+            if(targetNav) targetNav.classList.add('active');
+            document.getElementById('sidebar').classList.remove('mobile-open');
+        }
+
+        function renderGameplaConditions() {
+            const container = document.getElementById('conditions-container');
+            container.innerHTML = '';
+            document.getElementById('conditions-counter').innerText = state.gameplaConditions.length;
+            GAMEPLA_CONDITIONS.forEach(cond => {
+                const isChecked = state.gameplaConditions.includes(cond.id);
+                const item = document.createElement('div');
+                item.className = `condition-item ${isChecked ? 'checked' : ''}`;
+                item.innerHTML = `
+                    <input type="checkbox" class="condition-checkbox" data-id="${cond.id}" ${isChecked ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--success);cursor:pointer;">
+                    <div><h5 style="font-size:13px;">${cond.title}</h5><p style="font-size:11px;color:var(--text-muted);">${cond.desc}</p></div>
+                `;
+                container.appendChild(item);
+            });
+            document.querySelectorAll('.condition-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    if(e.target.checked) { if(!state.gameplaConditions.includes(id)) state.gameplaConditions.push(id); }
+                    else { state.gameplaConditions = state.gameplaConditions.filter(x => x !== id); }
+                    localStorage.setItem('vocalforge_gp_conditions', JSON.stringify(state.gameplaConditions));
+                    renderGameplaConditions();
+                });
+            });
+        }
+
+        function submitGameplaForm() {
+            const name = document.getElementById('gp-form-name').value.trim();
+            const gpid = document.getElementById('gp-form-id').value.trim();
+            const email = document.getElementById('gp-form-email').value.trim();
+            if(!name || !gpid || !email) { showToast('Vyplňte všetky polia formulára', 'error'); return; }
+            state.gameplaApp = {
+                applicantName: name, gameplaId: gpid, email: email,
+                submittedAt: new Date().toISOString(),
+                reviewTargetDate: addBusinessDays(new Date(), 3).toISOString(),
+                status: 'pending', generatedPin: null
+            };
+            localStorage.setItem('vocalforge_gp_app', JSON.stringify(state.gameplaApp));
+            updateGameplaStatusUI();
+            showToast('Žiadosť odoslaná! Systém rozhodne po 3 pracovných dňoch.', 'success');
+        }
+
+        function updateGameplaStatusUI() {
+            const box = document.getElementById('gamepla-status-box');
+            if(!state.gameplaApp) {
+                box.innerHTML = `<div style="text-align:center;color:var(--text-muted);"><i class="fa-solid fa-file-circle-question" style="font-size:28px;color:var(--gold);"></i><p style="font-size:13px;margin-top:6px;">Zatiaľ nebola odoslaná žiadna žiadosť o PIN.</p></div>`;
+                return;
+            }
+            const app = state.gameplaApp;
+            const isPassed = new Date() >= new Date(app.reviewTargetDate);
+            if(app.status === 'pending' && isPassed) {
+                if(state.gameplaConditions.length === 20) {
+                    app.status = 'approved';
+                    app.generatedPin = `GP631-${Math.floor(1000 + Math.random()*9000)}-${Math.floor(1000 + Math.random()*9000)}`;
+                } else {
+                    app.status = 'rejected';
+                    app.reason = `Splnili ste len ${state.gameplaConditions.length} z 20 podmienok.`;
+                }
+                localStorage.setItem('vocalforge_gp_app', JSON.stringify(app));
+            }
+            if(app.status === 'pending') {
+                box.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span class="badge gold"><i class="fa-solid fa-clock"></i> Posudzovanie (3 pracovné dni)</span>
+                        <button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;" onclick="simulateFastForward()"><i class="fa-solid fa-bolt"></i> Simulovať 3 dni</button>
+                    </div>
+                    <p style="font-size:13px;margin-top:8px;"><strong>Žiadateľ:</strong> ${app.applicantName} (${app.gameplaId})</p>
+                `;
+            } else if(app.status === 'approved') {
+                box.innerHTML = `
+                    <span class="badge success"><i class="fa-solid fa-check-circle"></i> Schválené (20/20 Podmienok)</span>
+                    <div class="pin-code-box" style="margin:10px 0;">${app.generatedPin}</div>
+                    <button class="btn btn-gold" style="width:100%;" onclick="document.getElementById('gp-pin-redeem-input').value='${app.generatedPin}'"><i class="fa-solid fa-copy"></i> Použiť v aktivátore</button>
+                `;
+            } else {
+                box.innerHTML = `<span class="badge danger">Žiadosť zamietnutá</span><p style="font-size:13px;color:var(--danger);margin-top:6px;">${app.reason}</p>`;
+            }
+        }
+
+        function simulateFastForward() {
+            if(!state.gameplaApp) return;
+            state.gameplaApp.reviewTargetDate = new Date(Date.now() - 10000).toISOString();
+            localStorage.setItem('vocalforge_gp_app', JSON.stringify(state.gameplaApp));
+            updateGameplaStatusUI();
+            showToast('Simulácia 3 pracovných dní dokončená.', 'success');
+        }
+
+        function redeemGameplaPin() {
+            const val = document.getElementById('gp-pin-redeem-input').value.trim().toUpperCase();
+            if(val.startsWith('GP631-')) {
+                state.diamonds += 10000;
+                state.gameplaPinActive = true;
+                localStorage.setItem('vocalforge_diamonds', state.diamonds);
+                localStorage.setItem('vocalforge_gp_pin_active', 'true');
+                updateDiamondsUI();
+                updateUIStats();
+                showToast('GAMEPLA631 PIN AKTIVOVANÝ! +10,000 Diamantov & VIP status.', 'success');
+            } else {
+                showToast('Neplatný PIN formát.', 'error');
+            }
+        }
+
+        function checkDailyDiamondsReset() {
+            const today = new Date().toDateString();
+            if(state.lastResetDate !== today) {
+                state.diamonds = CONFIG.dailyDiamonds;
+                state.lastResetDate = today;
+                localStorage.setItem('vocalforge_diamonds', state.diamonds);
+                localStorage.setItem('vocalforge_reset_date', today);
+            }
+            updateDiamondsUI();
+        }
+
+        function updateDiamondsUI() {
+            document.getElementById('diamonds-counter').innerText = `${state.diamonds} / ${CONFIG.dailyDiamonds}`;
+            document.getElementById('stat-diamonds').innerText = state.diamonds;
+            document.getElementById('diamonds-fill').style.width = `${Math.min(100, (state.diamonds/CONFIG.dailyDiamonds)*100)}%`;
+        }
+
+        function startResetTimer() {
+            setInterval(() => {
+                const now = new Date();
+                const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+                const diff = midnight - now;
+                const h = String(Math.floor((diff / 3600000) % 24)).padStart(2,'0');
+                const m = String(Math.floor((diff / 60000) % 60)).padStart(2,'0');
+                const s = String(Math.floor((diff / 1000) % 60)).padStart(2,'0');
+                document.getElementById('reset-timer').innerText = `${h}:${m}:${s}`;
+                if(diff <= 1000) checkDailyDiamondsReset();
+            }, 1000);
+        }
+
+        async function generateSpeech() {
+            const text = document.getElementById('tts-input').value.trim();
+            if(!text) { showToast('Zadajte text pre hlasovú syntézu', 'warning'); return; }
+            const cost = Math.max(10, Math.ceil(text.length / CONFIG.charsPerDiamond));
+            if(state.diamonds < cost) { showToast('Nedostatok diamantov.', 'error'); return; }
+            state.diamonds -= cost;
+            localStorage.setItem('vocalforge_diamonds', state.diamonds);
+            updateDiamondsUI();
+
+            const btn = document.getElementById('btn-generate');
+            btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generujem...`;
+            await new Promise(r => setTimeout(r, 1200));
+
+            if('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.rate = parseFloat(document.getElementById('range-speed').value);
+                u.pitch = parseFloat(document.getElementById('range-pitch').value);
+                u.volume = parseFloat(document.getElementById('range-volume').value)/100;
+                window.speechSynthesis.speak(u);
+            }
+
+            state.history.unshift({
+                id: Date.now(), text: text.substring(0, 50) + '...',
+                fullText: text, voice: document.getElementById('select-voice').value,
+                date: new Date().toLocaleDateString(), duration: '00:04', chars: text.length, diamonds: cost
+            });
+            localStorage.setItem('vocalforge_history', JSON.stringify(state.history));
+            renderHistoryTable(); renderDashboardHistory(); updateUIStats();
+            document.getElementById('audio-player-wrapper').style.display = 'block';
+            btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Speech`;
+            showToast('Hlas vygenerovaný!', 'success');
+        }
+
+        function renderVoices() {
+            const c = document.getElementById('voices-container');
+            c.innerHTML = '';
+            VOICES.forEach(v => {
+                const div = document.createElement('div');
+                div.className = 'voice-card';
+                div.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;"><div class="voice-avatar">${v.avatar}</div><span class="badge accent">${v.lang.toUpperCase()}</span></div>
+                    <div><h4 style="font-size:16px;">${v.name}</h4><p style="font-size:13px;color:var(--text-muted);">${v.style}</p></div>
+                    <button class="btn btn-primary" style="margin-top:auto;" onclick="document.getElementById('select-voice').value='${v.id}'; switchView('tts'); showToast('Hlas zvolený', 'success');">Použiť hlas</button>
+                `;
+                c.appendChild(div);
+            });
+        }
+
+        function openSaveProjectModal() { document.getElementById('project-modal').classList.add('active'); }
+        function saveCurrentProject() {
+            const name = document.getElementById('modal-project-name').value.trim() || 'Nový Projekt';
+            state.projects.unshift({ id: Date.now(), name, text: document.getElementById('tts-input').value, voice: document.getElementById('select-voice').value, updated: new Date().toLocaleDateString() });
+            localStorage.setItem('vocalforge_projects', JSON.stringify(state.projects));
+            document.getElementById('project-modal').classList.remove('active');
+            renderProjects(); showToast('Projekt uložený', 'success');
+        }
+        function renderProjects() {
+            const tb = document.getElementById('projects-table-body'); tb.innerHTML = '';
+            if(!state.projects.length) { tb.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-muted);">Žiadne projekty.</td></tr>`; return; }
+            state.projects.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><strong>${p.name}</strong></td><td>${p.voice}</td><td>${p.updated}</td><td><button class="icon-btn" onclick="loadProject(${p.id})"><i class="fa-solid fa-folder-open"></i></button></td>`;
+                tb.appendChild(tr);
+            });
+        }
+        function loadProject(id) {
+            const p = state.projects.find(x => x.id === id);
+            if(p) { document.getElementById('tts-input').value = p.text; switchView('tts'); showToast(`Načítané: ${p.name}`, 'success'); }
+        }
+
+        function renderHistoryTable() {
+            const tb = document.getElementById('history-table-body'); tb.innerHTML = '';
+            state.history.forEach(h => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${h.text}</td><td>${h.voice}</td><td>${h.date}</td><td>💎 ${h.diamonds}</td><td><button class="icon-btn" onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance('${h.fullText}'))"><i class="fa-solid fa-play"></i></button></td>`;
+                tb.appendChild(tr);
+            });
+        }
+        function renderDashboardHistory() {
+            const tb = document.getElementById('dashboard-recent-history'); tb.innerHTML = '';
+            state.history.slice(0, 5).forEach(h => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${h.text}</td><td>${h.voice}</td><td>${h.date}</td><td>${h.duration}</td><td><button class="icon-btn" onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance('${h.fullText}'))"><i class="fa-solid fa-play"></i></button></td>`;
+                tb.appendChild(tr);
+            });
+        }
+
+        function updateUIStats() {
+            document.getElementById('stat-generations').innerText = state.history.length;
+            document.getElementById('stat-img-conversions').innerText = state.imgConversionsCount;
+            document.getElementById('stat-pin-status').innerText = state.gameplaPinActive ? 'VIP Aktívny' : 'Neaktívny';
+            if(state.gameplaPinActive) document.getElementById('stat-pin-status').style.color = 'var(--gold)';
+        }
+
+        function updateApiStatusBadge() {
+            const dot = document.getElementById('api-status-dot');
+            const txt = document.getElementById('api-status-text');
+            if(state.apiKey) { dot.classList.add('active'); txt.innerText = 'API Connected'; }
+            else { dot.classList.remove('active'); txt.innerText = 'Demo Mode'; }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('vocalforge_theme', state.theme);
+            applyThemeAndAccent();
+        }
+        function applyThemeAndAccent() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            document.documentElement.setAttribute('data-accent', state.accent);
+            document.querySelector('#theme-toggle i').className = state.theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+        }
+
+        function showToast(msg, type = 'success') {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${msg}</span>`;
+            c.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
+        }
+    </script>
+</body>
+</html>
